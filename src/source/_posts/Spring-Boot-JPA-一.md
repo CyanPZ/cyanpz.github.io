@@ -1,6 +1,6 @@
 ---
 title: Spring Boot JPA (一)
-date: 2017-06-28 21:14:04
+date: "2017-06-28 21:14:04"
 tags:
 ---
 
