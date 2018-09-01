@@ -229,6 +229,146 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/01/SmallTrickToRestartSpringBoot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CPZ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cyan.">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/01/SmallTrickToRestartSpringBoot/" itemprop="url">重启/关闭SpringBoot</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-01T23:20:24+08:00">
+                2018-09-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="重启-关闭SpringBoot的姿势"><a href="#重启-关闭SpringBoot的姿势" class="headerlink" title="重启/关闭SpringBoot的姿势"></a>重启/关闭SpringBoot的姿势</h1><h2 id="我们如何关闭SpringBoot程序"><a href="#我们如何关闭SpringBoot程序" class="headerlink" title="我们如何关闭SpringBoot程序?"></a>我们如何关闭SpringBoot程序?</h2><ul>
+<li><p>首先找到程序的PID <code>ps aux | grep your-app.jar</code></p>
+</li>
+<li><p>然后 <code>kill PID</code> or <code>kill -9 PID</code></p>
+</li>
+</ul>
+<h2 id="我们如何重启SpringBoot程序"><a href="#我们如何重启SpringBoot程序" class="headerlink" title="我们如何重启SpringBoot程序?"></a>我们如何重启SpringBoot程序?</h2><ul>
+<li><p>首先 关闭它</p>
+</li>
+<li><p>然后启动它(废话)</p>
+</li>
+</ul>
+<h2 id="能不能优雅点？"><a href="#能不能优雅点？" class="headerlink" title="能不能优雅点？"></a>能不能优雅点？</h2><ul>
+<li>首先在启动类加入ApplicationPidFileWriter</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SpringApplication app=<span class="keyword">new</span> SpringApplication(DemoApplication.class);</span><br><span class="line">app.addListeners(<span class="keyword">new</span> ApplicationPidFileWriter(<span class="string">"app.pid"</span>));</span><br><span class="line">app.run(args);</span><br></pre></td></tr></table></figure>
+<p>加入这个Listener在SpringBoot程序启动时，SpringBoot会将当前程序的PID写入app.pid<br>如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  ls</span><br><span class="line">demo.jar</span><br><span class="line">cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  java -jar demo.jar &gt;log.log &amp; </span><br><span class="line">[1] 25189</span><br><span class="line">cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  ls</span><br><span class="line">app.pid  demo.jar  log.log</span><br><span class="line">cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  cat app.pid </span><br><span class="line">25189                                                               cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  vim app.pid </span><br><span class="line">cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  ps aux | grep demo.jar</span><br><span class="line">cyan     25189 34.4  4.3 6060504 345536 pts/2  SNl  23:56   0:11 java -jar demo.jar</span><br><span class="line">cyan     25270  0.0  0.0  15968  1008 pts/2    S+   23:57   0:00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn demo.jar</span><br><span class="line">`</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>此时我们就可以通过<code>cat app.pid</code>获得SpringBoot程序的PID</li>
+</ul>
+<p>进一步可以使用<code>kill -9 $(cat app.pid)</code>来关闭SpringBoot程序</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target <span class="built_in">kill</span> -9 $(cat app.pid)</span><br><span class="line">cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target</span><br><span class="line">[1]  + 25189 killed     java -jar demo.jar &gt; log.log</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/28/Spring-Boot-JPA-一/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -659,7 +799,7 @@ public class Address {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
