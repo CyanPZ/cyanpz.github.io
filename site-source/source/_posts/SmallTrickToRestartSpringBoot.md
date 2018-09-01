@@ -29,15 +29,16 @@ app.run(args);
 
 加入这个Listener在SpringBoot程序启动时，SpringBoot会将当前程序的PID写入app.pid
 如：
+
 ```bash
 cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  ls
 demo.jar
-cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  java -jar demo.jar >log.log & 
+cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  java -jar demo.jar >log.log &
 [1] 25189
 cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  ls
 app.pid  demo.jar  log.log
-cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  cat app.pid 
-25189                                                               cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  vim app.pid 
+cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  cat app.pid
+25189
 cyan@cyan-HP-ZBook-15 ~/Workspace/Idea/Demo/target  ps aux | grep demo.jar
 cyan     25189 34.4  4.3 6060504 345536 pts/2  SNl  23:56   0:11 java -jar demo.jar
 cyan     25270  0.0  0.0  15968  1008 pts/2    S+   23:57   0:00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn demo.jar
